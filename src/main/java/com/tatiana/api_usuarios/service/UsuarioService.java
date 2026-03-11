@@ -17,7 +17,7 @@ public class UsuarioService {
         ;
     }
 
-    public void criarUsuario(UsuarioDTO dto ) {
+    public void criarUsuario( UsuarioDTO dto ) {
 
         Usuario usuario = new Usuario(System.currentTimeMillis(), dto.getNome(), dto.getEmail());
         repository.salvar(usuario);
