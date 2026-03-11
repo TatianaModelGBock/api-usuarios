@@ -28,4 +28,16 @@ public class UsuarioController {
     public List<Usuario> listarUsuarios() {
         return service.listarUsuarios();
     }
+
+    @DeleteMapping("/{id}")
+    public String deletarUsuario(@PathVariable Long id) {
+        service.deletarUsuario(id);
+        return "Usuario deletado com sucesso";
+    }
+
+    @PutMapping("/{id}")
+    public String atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
+        service.atualizarUsuario(id, dto);
+        return "Usuario atualizado com sucesso";
+    }
 }

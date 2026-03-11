@@ -26,4 +26,13 @@ public class UsuarioService {
     public List<Usuario> listarUsuarios() {
         return repository.listar();
     }
+
+    public void deletarUsuario(Long id) {
+        repository.deletar(id);
+    }
+
+    public void atualizarUsuario(Long id, UsuarioDTO dto) {
+        Usuario usuarioAtualizado = new Usuario(id, dto.getNome(), dto.getEmail());
+        repository.atualizar(id, usuarioAtualizado);
+    }
 }
