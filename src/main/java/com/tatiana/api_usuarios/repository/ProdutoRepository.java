@@ -19,4 +19,12 @@ public class ProdutoRepository {
     public void deletar(Long id) {
         produtos.removeIf(produto -> produto.getId().equals(id));
     }
+    public void atualizar(Long id, Produto produtoAtualizado) {
+        for (int i = 0; i<produtos.size(); i++) {
+            if (produtos.get(i).getId().equals(id)) {
+                produtos.set(i, produtoAtualizado);
+                break;
+            }
+        }
+    }
 }
