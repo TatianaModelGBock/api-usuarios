@@ -1,22 +1,21 @@
 package com.tatiana.api_usuarios.dto;
 
-public class UsuarioDTO {
+public class ProdutoDTO {
 
     private String nome;
-    private String email;
-
+    private double preco;
     public String getNome() {
         return nome;
     }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public String getEmail() {
-        return email;
+    public double getPreco() {
+        return preco;
     }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPreco(double preco) {
+        this.preco = preco;
     }
 }

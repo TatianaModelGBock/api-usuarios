@@ -12,6 +12,18 @@ public class Usuario {
         this.email = email;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Long getId() {
         return id;
     }
