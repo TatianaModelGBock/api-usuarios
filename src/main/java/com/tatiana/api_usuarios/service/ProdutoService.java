@@ -11,6 +11,7 @@ import java.util.List;
 public class ProdutoService {
 
     private final ProdutoRepository repository;
+
     public ProdutoService(ProdutoRepository repository) {
         this.repository = repository;
     }
