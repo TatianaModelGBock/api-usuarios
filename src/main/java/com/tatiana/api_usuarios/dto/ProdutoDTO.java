@@ -4,6 +4,8 @@ public class ProdutoDTO {
 
     private String nome;
     private double preco;
+
+
     public String getNome() {
         return nome;
     }
