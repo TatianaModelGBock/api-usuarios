@@ -52,7 +52,6 @@ public class CaixaService {
 
         //usando o Produto.getPreco()
         ItemVenda item = new ItemVenda(produto.getId(), produto.getNome(), produto.getPreco(), dto.getQuantidade());
-        venda.getItens().add(item);
         venda.adicionarItem(item);
 
         return venda;

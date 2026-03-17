@@ -6,13 +6,14 @@ import com.tatiana.api_usuarios.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository repository;
 
-    private static Long contador = 1L;
+    private final AtomicLong sequencia = new AtomicLong(1L);
 
     public UsuarioService(UsuarioRepository repository) {
         this.repository = repository;
@@ -20,7 +21,7 @@ public class UsuarioService {
 
     public void criarUsuario(UsuarioDTO dto) {
 
-        Usuario usuario = new Usuario(contador++, dto.getNome(), dto.getEmail());
+        Usuario usuario = new Usuario(sequencia.getAndIncrement(), dto.getNome(), dto.getEmail());
 
 
         repository.salvar(usuario);

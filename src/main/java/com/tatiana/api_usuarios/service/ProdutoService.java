@@ -6,11 +6,13 @@ import com.tatiana.api_usuarios.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ProdutoService {
 
     private final ProdutoRepository repository;
+    private final AtomicLong sequencia = new AtomicLong(1L);
 
     public ProdutoService(ProdutoRepository repository) {
         this.repository = repository;
@@ -21,7 +23,7 @@ public class ProdutoService {
             throw new IllegalArgumentException("Preço deve ser maior que zero");
         }
 
-        Produto produto = new Produto(System.currentTimeMillis(), dto.getNome(), dto.getPreco());
+        Produto produto = new Produto(sequencia.getAndIncrement(), dto.getNome(), dto.getPreco());
 
         repository.salvar(produto);
     }
