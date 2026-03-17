@@ -9,6 +9,9 @@ public class FecharVendaDTO {
     }
 
     public void setValorRecebido(double valorRecebido) {
+        if(valorRecebido <= 0){
+            throw new IllegalArgumentException("Valor deve ser maior que zero");
+        }
         this.valorRecebido = valorRecebido;
     }
 }

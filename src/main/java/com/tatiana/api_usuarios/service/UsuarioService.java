@@ -28,11 +28,26 @@ public class UsuarioService {
     }
 
     public void deletarUsuario(Long id) {
+
+        Usuario usuario = repository.buscarPorId(id);
+
+        if(usuario == null){
+            throw new IllegalArgumentException("Usuário não encontrado");
+        }
+
         repository.deletar(id);
     }
 
     public void atualizarUsuario(Long id, UsuarioDTO dto) {
+
+        Usuario usuario = repository.buscarPorId(id);
+
+        if(usuario == null){
+            throw new IllegalArgumentException("Usuário não encontrado");
+        }
+
         Usuario usuarioAtualizado = new Usuario(id, dto.getNome(), dto.getEmail());
+
         repository.atualizar(id, usuarioAtualizado);
     }
 }

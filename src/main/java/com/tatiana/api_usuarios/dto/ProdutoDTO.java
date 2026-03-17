@@ -18,6 +18,9 @@ public class ProdutoDTO {
         return preco;
     }
     public void setPreco(double preco) {
+        if(preco < 0) {
+            throw new IllegalArgumentException("Preço não pode ser negativo");
+        }
         this.preco = preco;
     }
 }

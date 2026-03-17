@@ -53,7 +53,8 @@ public class CaixaService {
         //usando o Produto.getPreco()
         ItemVenda item = new ItemVenda(produto.getId(), produto.getNome(), produto.getPreco(), dto.getQuantidade());
         venda.getItens().add(item);
-        venda.adicionarAoTotalItens(item.getValorTotal());
+        venda.adicionarItem(item);
+
         return venda;
     }
     // buscar detalhes da venda
@@ -66,16 +67,30 @@ public class CaixaService {
     }
     //fechar a venda(receberpagamento e calcular o troco)
     public Venda fecharVenda(Long vendaId, FecharVendaDTO dto) {
+
         Venda venda = vendaRepository.buscarPorId(vendaId);
-        if (venda.isVendaFinalizada()) {
-            throw new IllegalArgumentException("Venda finalizada");
+
+        if (venda == null) {
+            throw new IllegalArgumentException("Venda não encontrada");
         }
+
+        if (venda.isVendaFinalizada()) {
+            throw new IllegalArgumentException("Venda já finalizada");
+        }
+
         double total = venda.getTotal();
         double recebido = dto.getValorRecebido();
+
         if (recebido < total) {
             throw new IllegalArgumentException("Valor recebido insuficiente");
         }
+
+        double troco = recebido - total;
+
         venda.setVendaFinalizada(true);
+
+        System.out.println("Troco: " + troco);
+
         return venda;
     }
 

@@ -53,7 +53,16 @@ public class Venda {
         this.vendaFinalizada = vendaFinalizada;
     }
 
-    public void adicionarAoTotalItens(double valor) {
-        this.total += valor;
+    public void adicionarItem(ItemVenda item) {
+
+        if (vendaFinalizada) {
+            throw new IllegalStateException("Venda já finalizada");
+        }
+
+        this.itens.add(item);
+        this.total += item.getValorTotal();
+    }
+    public void finalizarVenda() {
+        this.vendaFinalizada = true;
     }
 }

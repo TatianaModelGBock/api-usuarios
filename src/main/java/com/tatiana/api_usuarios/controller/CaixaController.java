@@ -4,6 +4,7 @@ import com.tatiana.api_usuarios.dto.AdicionarItemDTO;
 import com.tatiana.api_usuarios.dto.FecharVendaDTO;
 import com.tatiana.api_usuarios.model.Venda;
 import com.tatiana.api_usuarios.service.CaixaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,23 +18,22 @@ public class CaixaController {
     }
 
     @PostMapping("/vendas")
-    public Venda iniciarVenda() {
-        return caixaService.iniciarVenda();
+    public ResponseEntity<Venda> iniciarVenda() {
+        return ResponseEntity.ok(caixaService.iniciarVenda());
     }
 
     @PostMapping("/vendas/{id}/itens")
-    public Venda adicionarVenda(@PathVariable Long id, @RequestBody AdicionarItemDTO dto) {
-        return caixaService.adicionarItem(id, dto);
+    public ResponseEntity<Venda> adicionarItem(@PathVariable Long id, @RequestBody AdicionarItemDTO dto) {
+        return ResponseEntity.ok(caixaService.adicionarItem(id, dto));
     }
 
-
     @GetMapping("/vendas/{id}")
-    public Venda buscarVenda(@PathVariable Long id) {
-        return caixaService.buscarVenda(id);
+    public ResponseEntity<Venda> buscarVenda(@PathVariable Long id) {
+        return ResponseEntity.ok(caixaService.buscarVenda(id));
     }
 
     @PostMapping("/vendas/{id}/fechar")
-    public Venda finalizarVenda(@PathVariable Long id, @RequestBody FecharVendaDTO dto) {
-        return caixaService.fecharVenda(id, dto);
+    public ResponseEntity<Venda> finalizarVenda(@PathVariable Long id, @RequestBody FecharVendaDTO dto) {
+        return ResponseEntity.ok(caixaService.fecharVenda(id, dto));
     }
 }

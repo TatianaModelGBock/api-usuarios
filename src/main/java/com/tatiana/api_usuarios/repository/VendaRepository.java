@@ -20,7 +20,7 @@ public class VendaRepository {
     }
     public Venda buscarPorId(Long id) {
         for (Venda venda : vendas) {
-            if (venda.getId() != null && venda.getId().equals(id)) {
+            if (venda.getId().equals(id)) {
                 return venda;
             }
         }

@@ -3,6 +3,7 @@ package com.tatiana.api_usuarios.controller;
 import com.tatiana.api_usuarios.dto.UsuarioDTO;
 import com.tatiana.api_usuarios.model.Usuario;
 import com.tatiana.api_usuarios.service.UsuarioService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,26 +19,25 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public String criarUsuario(@RequestBody UsuarioDTO dto) {
+    public ResponseEntity<String> criarUsuario(@RequestBody UsuarioDTO dto) {
         service.criarUsuario(dto);
-
-        return "Usuario criado com sucesso";
+        return ResponseEntity.ok("Usuário criado com sucesso");
     }
 
     @GetMapping
-    public List<Usuario> listarUsuarios() {
-        return service.listarUsuarios();
+    public ResponseEntity<List<Usuario>> listarUsuarios() {
+        return ResponseEntity.ok(service.listarUsuarios());
     }
 
     @DeleteMapping("/{id}")
-    public String deletarUsuario(@PathVariable Long id) {
+    public ResponseEntity<String> deletarUsuario(@PathVariable Long id) {
         service.deletarUsuario(id);
-        return "Usuario deletado com sucesso";
+        return ResponseEntity.ok("Usuário deletado com sucesso");
     }
 
     @PutMapping("/{id}")
-    public String atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
+    public ResponseEntity<String> atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
         service.atualizarUsuario(id, dto);
-        return "Usuario atualizado com sucesso";
+        return ResponseEntity.ok("Usuário atualizado com sucesso");
     }
 }

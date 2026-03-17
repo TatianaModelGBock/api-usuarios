@@ -19,16 +19,27 @@ public class UsuarioRepository {
         return usuarios;
     }
 
+    public Usuario buscarPorId(Long id) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getId().equals(id)) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
     public void deletar(Long id) {
         usuarios.removeIf(usuario -> usuario.getId().equals(id));
     }
 
     public void atualizar(Long id, Usuario usuarioAtualizado) {
-        for(int i = 0; i < usuarios.size(); i++) {
-            if(usuarios.get(i).getId().equals(id)) {
-                usuarios.set(i, usuarioAtualizado);
+        for (Usuario usuario : usuarios) {
+            if (usuario.getId().equals(id)) {
+                usuario.setNome(usuarioAtualizado.getNome());
+                usuario.setEmail(usuarioAtualizado.getEmail());
             }
         }
     }
-
 }
+
+

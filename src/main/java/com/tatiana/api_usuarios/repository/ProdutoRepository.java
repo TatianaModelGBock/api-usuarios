@@ -19,26 +19,27 @@ public class ProdutoRepository {
         return produtos;
     }
 
+    public Produto buscarPorId(Long id) {
+        for (Produto produto : produtos) {
+            if (produto.getId().equals(id)) {
+                return produto;
+            }
+        }
+        return null;
+    }
+
     public void deletar(Long id) {
         produtos.removeIf(produto -> produto.getId().equals(id));
     }
 
     public void atualizar(Long id, Produto produtoAtualizado) {
-        for (int i = 0; i < produtos.size(); i++) {
-            if (produtos.get(i).getId().equals(id)) {
-                produtos.set(i, produtoAtualizado);
+        for (Produto produto : produtos) {
+            if (produto.getId().equals(id)) {
+                produto.setNome(produtoAtualizado.getNome());
+                produto.setPreco(produtoAtualizado.getPreco());
                 break;
             }
         }
-    }
-
-    public Produto buscarPorId(Long id) {
-        for (Produto produto : produtos) {
-            if (produto.getId() != null && produto.getId().equals(id)) {
-                return produto;
-            }
-        }
-        return null;
     }
 }
 

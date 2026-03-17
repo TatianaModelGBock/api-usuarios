@@ -17,6 +17,11 @@ public class AdicionarItemDTO {
     }
 
     public void setQuantidade(int quantidade) {
+
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero");
+        }
+
         this.quantidade = quantidade;
     }
 }

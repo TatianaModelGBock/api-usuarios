@@ -19,25 +19,25 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public String criarProduto(@RequestBody ProdutoDTO dto) {
+    public ResponseEntity<String> criarProduto(@RequestBody ProdutoDTO dto) {
         service.criarProduto(dto);
-        return "Produto criado com sucesso";
+        return ResponseEntity.ok("Produto criado com sucesso");
     }
 
     @GetMapping
-    public List<Produto> listarProdutos() {
-        return service.listarProdutos();
+    public ResponseEntity<List<Produto>> listarProdutos() {
+        return ResponseEntity.ok(service.listarProdutos());
     }
 
     @PutMapping("/{id}")
-    public String atualizarProduto(@PathVariable Long id,@RequestBody ProdutoDTO dto) {
+    public ResponseEntity<String> atualizarProduto(@PathVariable Long id, @RequestBody ProdutoDTO dto) {
         service.atualizarProduto(id, dto);
-        return "ProdutoAtualizado com sucesso";
+        return ResponseEntity.ok("Produto atualizado com sucesso");
     }
 
     @DeleteMapping("/{id}")
-    public String deletarProduto(@PathVariable Long id) {
+    public ResponseEntity<String> deletarProduto(@PathVariable Long id) {
         service.deletarProduto(id);
-        return "ProdutoDeletado com sucesso";
+        return ResponseEntity.ok("Produto deletado com sucesso");
     }
 }

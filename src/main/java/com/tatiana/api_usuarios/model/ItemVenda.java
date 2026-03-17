@@ -49,11 +49,17 @@ public class ItemVenda {
     }
 
     public void setValorUnitario(double valorUnitario) {
+        if(valorUnitario < 0){
+            throw new IllegalArgumentException("Preço não pode ser negativo");
+        }
         this.valorUnitario = valorUnitario;
         this.valorTotal = this.valorUnitario * this.quantidade;
     }
 
     public void setQuantidade(int quantidade) {
+        if(quantidade <= 0) {
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero");
+        }
         this.quantidade = quantidade;
         this.valorTotal = this.valorUnitario * this.quantidade;
     }
