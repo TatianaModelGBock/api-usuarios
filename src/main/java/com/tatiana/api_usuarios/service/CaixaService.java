@@ -24,7 +24,7 @@ public class CaixaService {
         this.produtoRepository = produtoRepository;
     }
 
-    //inicia uma venda vazia
+    //inicia uma venda
     public Venda iniciarVenda() {
         Long novoId = sequencia.getAndIncrement();
         Venda venda = new Venda(novoId);
@@ -32,7 +32,7 @@ public class CaixaService {
         return venda;
     }
 
-    //add um item a venda
+    //add um item
     public Venda adicionarItem(Long vendaId, AdicionarItemDTO dto)
     {
         Venda venda = vendaRepository.buscarPorId(vendaId);
@@ -50,7 +50,7 @@ public class CaixaService {
             throw new IllegalArgumentException("Quantidade deve ser maior que zero");
         }
 
-        //usando o Produto.getPreco()
+        //usando o Produto
         ItemVenda item = new ItemVenda(produto.getId(), produto.getNome(), produto.getPreco(), dto.getQuantidade());
         venda.adicionarItem(item);
 
@@ -64,7 +64,7 @@ public class CaixaService {
         }
         return venda;
     }
-    //fechar a venda(receberpagamento e calcular o troco)
+    //fechar a venda
     public Venda fecharVenda(Long vendaId, FecharVendaDTO dto) {
 
         Venda venda = vendaRepository.buscarPorId(vendaId);
