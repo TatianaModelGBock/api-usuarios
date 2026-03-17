@@ -12,17 +12,18 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
 
+    private static Long contador = 1L; // 👈 AQUI
+
     public UsuarioService(UsuarioRepository repository) {
-        this.repository = repository
-        ;
+        this.repository = repository;
     }
 
-    public void criarUsuario( UsuarioDTO dto ) {
+    public void criarUsuario(UsuarioDTO dto) {
 
-        Usuario usuario = new Usuario(System.currentTimeMillis(), dto.getNome(), dto.getEmail());
+        Usuario usuario = new Usuario(contador++, dto.getNome(), dto.getEmail()); // 👈 AQUI
+
         repository.salvar(usuario);
     }
-
     public List<Usuario> listarUsuarios() {
         return repository.listar();
     }
