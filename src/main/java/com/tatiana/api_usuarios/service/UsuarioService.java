@@ -20,7 +20,8 @@ public class UsuarioService {
 
     public void criarUsuario(UsuarioDTO dto) {
 
-        Usuario usuario = new Usuario(contador++, dto.getNome(), dto.getEmail()); // 👈 AQUI
+        Usuario usuario = new Usuario(contador++, dto.getNome(), dto.getEmail());
+
 
         repository.salvar(usuario);
     }
