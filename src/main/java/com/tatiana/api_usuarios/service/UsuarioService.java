@@ -12,7 +12,7 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
 
-    private static Long contador = 1L; //
+    private static Long contador = 1L;
 
     public UsuarioService(UsuarioRepository repository) {
         this.repository = repository;
