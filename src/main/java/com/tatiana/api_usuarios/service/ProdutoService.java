@@ -5,6 +5,8 @@ import com.tatiana.api_usuarios.model.Produto;
 import com.tatiana.api_usuarios.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -29,7 +31,9 @@ public class ProdutoService {
     }
 
     public List<Produto> listarProdutos() {
-        return repository.listar();
+        List<Produto> produtos =  new ArrayList<>(repository.listar());
+        produtos.sort(Comparator.comparing(Produto::getPreco));
+        return produtos;
     }
 
     public void deletarProduto(Long id) {

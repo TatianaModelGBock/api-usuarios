@@ -5,6 +5,7 @@ import com.tatiana.api_usuarios.model.Usuario;
 import com.tatiana.api_usuarios.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -27,7 +28,9 @@ public class UsuarioService {
         repository.salvar(usuario);
     }
     public List<Usuario> listarUsuarios() {
-        return repository.listar();
+        List<Usuario> usuarios = repository.listar();
+        usuarios.sort(Comparator.comparing(Usuario::getNome));
+        return usuarios;
     }
 
     public void deletarUsuario(Long id) {
