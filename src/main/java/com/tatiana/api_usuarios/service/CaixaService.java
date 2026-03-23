@@ -9,88 +9,64 @@ import com.tatiana.api_usuarios.repository.ProdutoRepository;
 import com.tatiana.api_usuarios.repository.VendaRepository;
 import org.springframework.stereotype.Service;
 
-
-import java.util.concurrent.atomic.AtomicLong;
-
 @Service
 public class CaixaService {
 
     private final VendaRepository vendaRepository;
     private final ProdutoRepository produtoRepository;
-    private final AtomicLong sequencia = new AtomicLong(1L);
 
-    public CaixaService(VendaRepository vendaRepository, ProdutoRepository produtoRepository) {
+    public CaixaService(VendaRepository vendaRepository,
+                        ProdutoRepository produtoRepository) {
         this.vendaRepository = vendaRepository;
         this.produtoRepository = produtoRepository;
     }
 
-    //inicia uma venda
     public Venda iniciarVenda() {
-        Long novoId = sequencia.getAndIncrement();
-        Venda venda = new Venda(novoId);
-        vendaRepository.salvar(venda);
-        return venda;
+        Venda venda = new Venda();
+        return vendaRepository.save(venda);
     }
 
-    //add um item
-    public Venda adicionarItem(Long vendaId, AdicionarItemDTO dto)
-    {
-        Venda venda = vendaRepository.buscarPorId(vendaId);
-        if (venda == null) {
-            throw new IllegalArgumentException("Venda não encontrada");
-        }
+    public Venda adicionarItem(Long vendaId, AdicionarItemDTO dto) {
+        Venda venda = vendaRepository.findById(vendaId)
+                .orElseThrow(() -> new IllegalArgumentException("Venda não encontrada"));
+
         if (venda.isVendaFinalizada()) {
             throw new IllegalArgumentException("Venda finalizada");
         }
-        Produto produto = produtoRepository.buscarPorId(dto.getProdutoId());
-        if (produto == null) {
-            throw new IllegalArgumentException("Produto não encontrada");
-        }
+
+        Produto produto = produtoRepository.findById(dto.getProdutoId())
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
         if (dto.getQuantidade() <= 0) {
             throw new IllegalArgumentException("Quantidade deve ser maior que zero");
         }
 
-        //usando o Produto
-        ItemVenda item = new ItemVenda(produto.getId(), produto.getNome(), produto.getPreco(), dto.getQuantidade());
+        ItemVenda item = new ItemVenda(
+                produto.getId(), produto.getNome(),
+                produto.getPreco(), dto.getQuantidade());
+
         venda.adicionarItem(item);
-
-        return venda;
+        return vendaRepository.save(venda);
     }
-    // buscar detalhes da venda
+
     public Venda buscarVenda(Long vendaId) {
-        Venda venda = vendaRepository.buscarPorId(vendaId);
-        if (venda == null) {
-            throw new IllegalArgumentException("Venda não encontrada");
-        }
-        return venda;
+        return vendaRepository.findById(vendaId)
+                .orElseThrow(() -> new IllegalArgumentException("Venda não encontrada"));
     }
-    //fechar a venda
+
     public Venda fecharVenda(Long vendaId, FecharVendaDTO dto) {
-
-        Venda venda = vendaRepository.buscarPorId(vendaId);
-
-        if (venda == null) {
-            throw new IllegalArgumentException("Venda não encontrada");
-        }
+        Venda venda = vendaRepository.findById(vendaId)
+                .orElseThrow(() -> new IllegalArgumentException("Venda não encontrada"));
 
         if (venda.isVendaFinalizada()) {
             throw new IllegalArgumentException("Venda já finalizada");
         }
 
-        double total = venda.getTotal();
-        double recebido = dto.getValorRecebido();
-
-        if (recebido < total) {
+        if (dto.getValorRecebido() < venda.getTotal()) {
             throw new IllegalArgumentException("Valor recebido insuficiente");
         }
 
-        double troco = recebido - total;
-
         venda.setVendaFinalizada(true);
-
-        System.out.println("Troco: " + troco);
-
-        return venda;
+        return vendaRepository.save(venda);
     }
-
 }

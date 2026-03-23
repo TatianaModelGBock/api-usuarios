@@ -14,46 +14,36 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
 
-    private final AtomicLong sequencia = new AtomicLong(1L);
 
     public UsuarioService(UsuarioRepository repository) {
         this.repository = repository;
     }
 
     public void criarUsuario(UsuarioDTO dto) {
-
-        Usuario usuario = new Usuario(sequencia.getAndIncrement(), dto.getNome(), dto.getEmail());
-
-
-        repository.salvar(usuario);
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+        repository.save(usuario);
     }
+
     public List<Usuario> listarUsuarios() {
-        List<Usuario> usuarios = repository.listar();
+        List<Usuario> usuarios = repository.findAll();
         usuarios.sort(Comparator.comparing(Usuario::getNome));
         return usuarios;
     }
 
     public void deletarUsuario(Long id) {
-
-        Usuario usuario = repository.buscarPorId(id);
-
-        if(usuario == null){
+        if (!repository.existsById(id)) {
             throw new IllegalArgumentException("Usuário não encontrado");
         }
-
-        repository.deletar(id);
+        repository.deleteById(id);
     }
 
     public void atualizarUsuario(Long id, UsuarioDTO dto) {
-
-        Usuario usuario = repository.buscarPorId(id);
-
-        if(usuario == null){
-            throw new IllegalArgumentException("Usuário não encontrado");
-        }
-
-        Usuario usuarioAtualizado = new Usuario(id, dto.getNome(), dto.getEmail());
-
-        repository.atualizar(id, usuarioAtualizado);
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+        repository.save(usuario);
     }
 }

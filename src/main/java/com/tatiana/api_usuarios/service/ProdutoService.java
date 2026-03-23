@@ -14,49 +14,42 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ProdutoService {
 
     private final ProdutoRepository repository;
-    private final AtomicLong sequencia = new AtomicLong(1L);
+
 
     public ProdutoService(ProdutoRepository repository) {
         this.repository = repository;
     }
+
     public void criarProduto(ProdutoDTO dto) {
 
         if(dto.getPreco() <= 0){
             throw new IllegalArgumentException("Preço deve ser maior que zero");
         }
 
-        Produto produto = new Produto(sequencia.getAndIncrement(), dto.getNome(), dto.getPreco());
-
-        repository.salvar(produto);
+        Produto produto = new Produto();
+        produto.setNome(dto.getNome());
+        produto.setPreco(dto.getPreco());
+        repository.save(produto);
     }
 
     public List<Produto> listarProdutos() {
-        List<Produto> produtos =  new ArrayList<>(repository.listar());
+        List<Produto> produtos =  repository.findAll();
         produtos.sort(Comparator.comparing(Produto::getPreco));
         return produtos;
     }
 
     public void deletarProduto(Long id) {
-
-        Produto produto = repository.buscarPorId(id);
-
-        if(produto == null){
+        if (!repository.existsById(id)) {
             throw new IllegalArgumentException("Produto não encontrado");
         }
-
-        repository.deletar(id);
+        repository.deleteById(id);
     }
 
     public void atualizarProduto(Long id, ProdutoDTO dto) {
-
-        Produto produto = repository.buscarPorId(id);
-
-        if(produto == null){
-            throw new IllegalArgumentException("Produto não encontrado");
-        }
-
-        Produto produtoAtualizado = new Produto(id, dto.getNome(), dto.getPreco());
-
-        repository.atualizar(id, produtoAtualizado);
+        Produto produto = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+        produto.setNome(dto.getNome());
+        produto.setPreco(dto.getPreco());
+        repository.save(produto);
     }
 }
