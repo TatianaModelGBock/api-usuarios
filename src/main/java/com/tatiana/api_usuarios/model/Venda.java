@@ -1,13 +1,19 @@
 package com.tatiana.api_usuarios.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+@Entity
 public class Venda {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime dataHora;
+
+    @OneToMany(cascade = CascadeType.ALL)
     private List<ItemVenda> itens;
     private double total;
     private boolean vendaFinalizada;
