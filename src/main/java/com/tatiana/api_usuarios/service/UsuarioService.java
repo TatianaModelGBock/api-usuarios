@@ -20,6 +20,9 @@ public class UsuarioService {
     }
 
     public void criarUsuario(UsuarioDTO dto) {
+        if (repository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("Email já cadastrado");
+        }
         Usuario usuario = new Usuario();
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
