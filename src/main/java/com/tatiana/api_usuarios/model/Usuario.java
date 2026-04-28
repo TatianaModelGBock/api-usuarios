@@ -1,9 +1,6 @@
 package com.tatiana.api_usuarios.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Usuario {
@@ -14,6 +11,9 @@ public class Usuario {
         private String nome;
         private String email;
 
+        @Version
+        private Integer version;
+
         public Usuario() {}
 
         public Usuario(Long id, String nome, String email) {
@@ -21,6 +21,9 @@ public class Usuario {
             this.nome = nome;
             this.email = email;
         }
+    public Integer getVersion() {
+        return version;
+    }
 
         public Long getId() {
             return id;
