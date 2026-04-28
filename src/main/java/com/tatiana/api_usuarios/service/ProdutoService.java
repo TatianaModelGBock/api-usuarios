@@ -25,6 +25,9 @@ public class ProdutoService {
         if(dto.getPreco() <= 0){
             throw new IllegalArgumentException("Preço deve ser maior que zero");
         }
+        if (repository.existsByNome(dto.getNome())) {
+            throw new IllegalArgumentException("Produto já cadastrado");
+        }
 
         Produto produto = new Produto();
         produto.setNome(dto.getNome());
