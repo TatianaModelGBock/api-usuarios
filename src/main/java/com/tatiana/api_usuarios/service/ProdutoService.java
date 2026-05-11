@@ -3,9 +3,9 @@ package com.tatiana.api_usuarios.service;
 import com.tatiana.api_usuarios.dto.ProdutoDTO;
 import com.tatiana.api_usuarios.model.Produto;
 import com.tatiana.api_usuarios.repository.ProdutoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -19,7 +19,7 @@ public class ProdutoService {
     public ProdutoService(ProdutoRepository repository) {
         this.repository = repository;
     }
-
+    @Transactional
     public void criarProduto(ProdutoDTO dto) {
 
         if(dto.getPreco() <= 0){
@@ -32,7 +32,10 @@ public class ProdutoService {
         Produto produto = new Produto();
         produto.setNome(dto.getNome());
         produto.setPreco(dto.getPreco());
+        produto.setQuantidadeEstoque(dto.getQuantidadeEstoque());
+        produto.setEstoqueMinimo(dto.getEstoqueMinimo());
         repository.save(produto);
+
     }
 
     public List<Produto> listarProdutos() {
@@ -47,12 +50,30 @@ public class ProdutoService {
         }
         repository.deleteById(id);
     }
-
+    @Transactional
     public void atualizarProduto(Long id, ProdutoDTO dto) {
         Produto produto = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
         produto.setNome(dto.getNome());
         produto.setPreco(dto.getPreco());
+        produto.setQuantidadeEstoque(dto.getQuantidadeEstoque());
+        produto.setEstoqueMinimo(dto.getEstoqueMinimo());
+        repository.save(produto);
+    }
+    @Transactional
+    public void baixarEstoque(Long id, int quantidade) {
+        Produto produto = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
+        int novoEstoque = produto.getQuantidadeEstoque() - quantidade;
+        produto.setQuantidadeEstoque(novoEstoque);
+
+
+        if (novoEstoque <= produto.getEstoqueMinimo()) {
+            System.out.println("LOG [ALERTA]: Estoque crítico para" + produto.getNome() +
+                    ". Mínimo: " + produto.getEstoqueMinimo() +
+                    "| Atual: " + novoEstoque );
+        }
         repository.save(produto);
     }
 }

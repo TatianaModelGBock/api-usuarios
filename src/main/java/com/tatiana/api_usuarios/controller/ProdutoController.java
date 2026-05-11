@@ -2,6 +2,7 @@ package com.tatiana.api_usuarios.controller;
 
 import com.tatiana.api_usuarios.dto.ProdutoDTO;
 import com.tatiana.api_usuarios.model.Produto;
+import com.tatiana.api_usuarios.model.Venda;
 import com.tatiana.api_usuarios.service.ProdutoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +40,14 @@ public class ProdutoController {
     public ResponseEntity<String> deletarProduto(@PathVariable Long id) {
         service.deletarProduto(id);
         return ResponseEntity.ok("Produto deletado com sucesso");
+    }
+    @PatchMapping("/{id}/venda")
+    public ResponseEntity<String> realizarVenda(@PathVariable Long id, @RequestParam int quantidade) {
+        try{
+            service.baixarEstoque(id, quantidade);
+            return ResponseEntity.ok("Venda realizada e estoque atualizado!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
