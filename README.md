@@ -1,6 +1,6 @@
 # 🛒 API de Usuários, Produtos e Caixa
 
-API REST desenvolvida em Java com Spring Boot como projeto de estudo de arquitetura em camadas (Controller, Service, Repository), DTOs, persistência com JPA, ordenação, idempotência e controle de concorrência.
+API REST desenvolvida em Java com Spring Boot como projeto de estudo de arquitetura em camadas (Controller, Service, Repository), DTOs, persistência com JPA, ordenação, idempotência, controle de concorrência e controle de estoque.
 
 ---
 
@@ -77,19 +77,23 @@ Requisição HTTP
 | GET | `/produtos` | Lista todos os produtos ordenados por preço (menor→maior) |
 | PUT | `/produtos/{id}` | Atualiza os dados de um produto |
 | DELETE | `/produtos/{id}` | Remove um produto |
+| PATCH | `/produtos/{id}/venda?quantidade={n}` | Baixa o estoque após uma venda |
 
 **Body para criar/atualizar:**
 ```json
 {
   "nome": "Café",
-  "preco": 5.0
+  "preco": 5.0,
+  "quantidadeEstoque": 10,
+  "estoqueMinimo": 3
 }
 ```
 
 **Regras:**
 - Nome deve ser único — não é possível cadastrar dois produtos com o mesmo nome
 - Preço deve ser maior que zero
-- Retorna `400 Bad Request` se o nome já estiver cadastrado ou o preço for inválido
+- Estoque e estoque mínimo não podem ser negativos
+- Retorna `400 Bad Request` se o estoque for insuficiente para a venda
 
 ---
 
@@ -143,6 +147,14 @@ Protege contra o problema de "atualização perdida" quando dois usuários edita
 - O JPA incrementa esse campo automaticamente a cada atualização
 - Se duas requisições tentarem salvar a mesma versão, a segunda é rejeitada com `409 Conflict` e a mensagem: `"Registro alterado por outro usuário. Tente novamente."`
 
+### 📦 Controle de estoque
+Gerencia o estoque dos produtos com segurança e integridade:
+- Cada produto possui `quantidadeEstoque` e `estoqueMinimo`
+- O estoque nunca pode ficar negativo — trava de segurança no Model
+- Quando o estoque atinge o nível crítico (abaixo do mínimo), o sistema gera um alerta automático no log
+- As operações de estoque usam `@Transactional` para garantir integridade dos dados
+- O Controller captura exceções de estoque insuficiente e devolve mensagens claras ao usuário
+
 ### ⚠️ Tratamento global de erros
 A classe `GlobalExceptionHandler` centraliza o tratamento de exceções da API:
 - `IllegalArgumentException` → `400 Bad Request` com mensagem descritiva
@@ -190,12 +202,13 @@ http://localhost:8080/h2-console
 ## 📝 Exemplo de fluxo completo de venda
 
 ```
-1. POST /produtos          → cria um produto
-2. GET  /produtos          → lista produtos e anota o ID
-3. POST /caixa/vendas      → inicia uma venda (retorna o ID da venda)
-4. POST /caixa/vendas/1/itens  → adiciona o produto à venda
-5. GET  /caixa/vendas/1    → consulta o total da venda
-6. POST /caixa/vendas/1/fechar → fecha a venda informando o valor recebido
+1. POST /produtos                        → cria um produto com estoque
+2. GET  /produtos                        → lista produtos e anota o ID
+3. POST /caixa/vendas                    → inicia uma venda (retorna o ID da venda)
+4. POST /caixa/vendas/1/itens            → adiciona o produto à venda
+5. GET  /caixa/vendas/1                  → consulta o total da venda
+6. POST /caixa/vendas/1/fechar           → fecha a venda informando o valor recebido
+7. PATCH /produtos/1/venda?quantidade=2  → baixa o estoque do produto vendido
 ```
 
 ---
@@ -231,6 +244,3 @@ src/main/java/com/tatiana/api_usuarios/
 
 ---
 
-## 👩‍💻 Autora
-
-Feito por **Tatiana** como projeto de estudo de arquitetura REST com Java Spring Boot.
